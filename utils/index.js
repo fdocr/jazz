@@ -1,45 +1,52 @@
-exports.errorTypes = errorTypes();
-exports.CustomError = CustomError;  //TODO: Set CustomError to proper name (?)
-                                    //If modified change in 'middleware' too
+var Promise = require('bluebird'),
+    bcrypt = Promise.promisifyAll(require('bcrypt')),
+    config = require('../config');
 
-function CustomError(err) {
+exports.errorTypes = errorTypes();
+exports.JazzError = JazzError;
+
+function JazzError(err) {
   this.status = err.status;
   this.message = err.message;
-  Error.captureStackTrace(this, CustomError);
+  Error.captureStackTrace(this, JazzError);
 }
-CustomError.prototype = Object.create(Error.prototype);
-CustomError.prototype.constructor = CustomError;
+JazzError.prototype = Object.create(Error.prototype);
+JazzError.prototype.constructor = JazzError;
 
 function errorTypes() {
 	return {
 		//https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-		incorrectParameters : {
-			status : 400,
-			message : 'Incorrect or missing parameters.'
+		incorrectParameters: {
+			status: 400,
+			message: 'Incorrect or missing parameters.'
 		},
-		unauthorized : {
-			status : 401,		//http://stackoverflow.com/a/6937030/3462026
-			message : 'Unauthorized.'
+		unauthorized: {
+			status: 401,		//http://stackoverflow.com/a/6937030/3462026
+			message: 'Unauthorized.'
 		},
-		accessDenied : {
-			status : 403,		//http://stackoverflow.com/a/6937030/3462026
-			message : 'Access denied.'
+		accessDenied: {
+			status: 403,		//http://stackoverflow.com/a/6937030/3462026
+			message: 'Forbidden - Access denied.'
 		},
-    notFound : {
-			status : 404,
-			message : 'Not found.'
+    notFound: {
+			status: 404,
+			message: 'Not found.'
 		},
-		noTokenProvided : {
-			status : 405,
-			message : 'No token provided.'
+		noTokenProvided: {
+			status: 405,
+			message: 'No token provided.'
 		},
-		internalServerError : {
-			status : 500,
-			message : 'Internal server error.'
+    emailInUse: {
+      status: 420,
+      message: 'Email already in use. Forgot your password?'
+    },
+		internalServerError: {
+			status: 500,
+			message: 'Internal server error.'
 		},
-		databaseError : {
-			status : 501,
-			message : 'Database connection error'
+		databaseError: {
+			status: 501,
+			message: 'Database connection error'
 		}
 	};
 }

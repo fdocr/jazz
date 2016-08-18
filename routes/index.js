@@ -9,8 +9,11 @@ router.get('/public', function(req, res) {
 	res.json({'success': 'true'});
 });
 
-router.get('/private', middleware, function(req, res) {
+router.get('/private', middleware.auth, function(req, res) {
 	res.json({'success': 'true'});
 });
+
+router.use('/auth', require('./auth.js'));
+router.use('/users', require('./users.js'));
 
 module.exports = router;

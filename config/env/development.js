@@ -1,5 +1,5 @@
 module.exports = {
-  db : 'db://url',
-	secretHash : 'thecakeisalie',
+  db : 'postgres://postgres:passwd@localhost:5432/jazz',
+	secretHash : '$th$ecakeisalieqweqweqwe',
 	env : 'development'
 };

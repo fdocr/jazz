@@ -1,5 +1,6 @@
-var Promise = require('bluebird'),
-		expect = require("chai").expect;
+var expect = require('chai').expect,
+		authTests = require('./auth.js');
 
-describe('Test Suite', function() {
+describe('Jazz Test Suite', function() {
+	authTests();
 });
