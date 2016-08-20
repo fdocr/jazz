@@ -52,7 +52,7 @@ router.post('/register', function(req, res) {
     });
   })
   .then(function(user) {
-    res.json('JWT ' + signJWT(user.id));
+    res.json({ token: 'JWT ' + signJWT(user.id) });
   })
   .catch(function(err) {
     if(!err.customError) err = errorTypes.badRequest;
@@ -78,49 +78,32 @@ router.post('/email', function(req, res) {
   var userId;
   User.findOne({ where : { email: email } })
   .then(function(user) {
-    userId = user.id;
-    if(!user) throw new RewardHubError(errorTypes.notFound);
-    else return bcrypt.compareAsync(password, user.password);
+    if(!user) throw new JazzError(errorTypes.notFound);
+    else {
+      userId = user.id;
+      return bcrypt.compareAsync(password, user.password);
+    }
   })
   .then(function(validPassword) {
     if(!validPassword) throw new JazzError(errorTypes.unauthorized);
-    else res.json('JWT ' + signJWT(userId));
+    else res.json({ token: 'JWT ' + signJWT(userId) });
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    if(!err.customError) {
+      console.log(err.message);
+      err = errorTypes.badRequest;
+    }
     res.status(err.status).json(err.message);
   });
 });
 
 /**
-  * @description: Refreshes the expiration of a valid token
-  * @param token: A valid JWT
+  * @description: Refreshes the expiration of a valid token that is
+  *               sent as authentication
   * @return: The new JWT bearer token
   */
 router.post('/refresh', passport.authenticate, function(req, res) {
-  var password = req.body.password,
-      email = req.body.email;
-
-  if(!req.body.token) {
-    var err = errorTypes.incorrectParameters;
-    return res.status(err.status).json(err.message);
-  }
-
-  var userId;
-  User.findOne({ where : { email: email } })
-  .then(function(user) {
-    userId = user.id;
-    if(!user) throw new RewardHubError(errorTypes.notFound);
-    else return bcrypt.compareAsync(password, user.password);
-  })
-  .then(function(validPassword) {
-    if(!validPassword) throw new JazzError(errorTypes.unauthorized);
-    else res.json('JWT ' + signJWT(userId));
-  })
-  .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
-    res.status(err.status).json(err.message);
-  });
+  res.json({ token: 'JWT ' + signJWT(req.user.id) });
 });
 
 module.exports = router;

@@ -1,0 +1,11 @@
+version: '2'
+services:
+  db:
+    image: fdoxyz/test-postgres
+  api:
+    build: .
+    image: fdoxyz/jazz
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db

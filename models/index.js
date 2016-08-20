@@ -1,9 +1,12 @@
-var fs        = require("fs"),
-    path      = require("path"),
-    Sequelize = require("sequelize"),
+var fs        = require('fs'),
+    path      = require('path'),
+    Sequelize = require('sequelize'),
     config    = require(path.join(__dirname, '..', 'config')),
-    sequelize = new Sequelize(config.db),
+    opts      = {},
     db        = {};
+
+if(config.env === 'production') opts.logging = false;
+sequelize = new Sequelize(config.db, opts);
 
 //Loads all models into db
 fs.readdirSync(__dirname)

@@ -12,6 +12,8 @@ var opts = {
 };
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+  console.log('authenticating: ');
+  console.log(jwt_payload);
   User.findOne({
     where: { id: jwt_payload.id },
     attributes: { exclude: ['password'] }
