@@ -1,10 +1,10 @@
-var User = require('../models').User,
-    config = require('./index.js'),
-    unauthorized = require('../utils').errorTypes.unauthorized,
-    passport = require('passport'),
-    passportJWT = require('passport-jwt'),
-    JwtStrategy = passportJWT.Strategy,
-    ExtractJwt = passportJWT.ExtractJwt;
+var User          = require('../models').User,
+    config        = require('./index.js'),
+    unauthorized  = require('../utils').errorTypes.unauthorized,
+    passport      = require('passport'),
+    passportJWT   = require('passport-jwt'),
+    JwtStrategy   = passportJWT.Strategy,
+    ExtractJwt    = passportJWT.ExtractJwt;
 
 var opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeader(),
@@ -17,7 +17,7 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
     attributes: { exclude: ['password'] }
   })
   .then(function(user) {
-    if (user) return user;
+    if(user) return user;
     else return false;
   })
   .asCallback(done);

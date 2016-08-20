@@ -7,7 +7,9 @@ This is an opinionated starter template for a lightweight Express based REST API
 * Test suite template using mocha and chai
 * Authentication using JWT (maybe questionable decision, but I trust & like it)
 
-Still very much a WIP, it even has some custom names (like the error handling one). Current master branch is using postgres, but branches will hopefully contain multiple DB setups.
+Still very much a WIP, it even has some custom names (like the error handling one). Current master is using postgres, but branches will hopefully contain multiple DB setups.
+
+Checkout the [contributing page](https://github.com/fdoxyz/node-jwt-template/blob/master/CONTRIBUTING.md) in case you are interested in giving me a hand.
 
 ### Where to go from here?
 
@@ -15,7 +17,7 @@ Choose a database and authenticate users. The verification of the JWT will use [
 
 Why this authentication method? Mostly because it's a stateless implementation, simplicity & stubbornness tbh. I love discussing this subject, hit me with an email or -> [@fdoxyz](https://twitter.com/fdoxyz)
 
-##### LICENSE
+### LICENSE
 
 ```
 The MIT License

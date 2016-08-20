@@ -5,6 +5,7 @@ var fs        = require("fs"),
     sequelize = new Sequelize(config.db),
     db        = {};
 
+//Loads all models into db
 fs.readdirSync(__dirname)
   .filter(function(file) {
     return (file.indexOf(".") !== 0) && (file !== "index.js");
@@ -14,10 +15,9 @@ fs.readdirSync(__dirname)
     db[model.name] = model;
   });
 
+//Executes associations
 Object.keys(db).forEach(function(modelName) {
-  if ("associate" in db[modelName]) {
-    db[modelName].associate(db);
-  }
+  if("associate" in db[modelName]) db[modelName].associate(db);
 });
 
 db.sequelize = sequelize;

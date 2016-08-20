@@ -1,12 +1,12 @@
-var router = require('express').Router(),
-		passport = require('../config/passport.js');
+var router    = require('express').Router(),
+    passport  = require('../config/passport.js');
 
 router.get('/public', function(req, res) {
-	res.json({'success': 'true'});
+  res.json({'success': 'true'});
 });
 
 router.get('/private', passport.authenticate, function(req, res) {
-	res.json({'success': req.user });
+  res.json({'success': req.user });
 });
 
 router.use('/auth', require('./auth.js'));
