@@ -1,19 +1,19 @@
 ### Node JWT Template
 
-This is an opinionated starter template for a lightweight Express based REST API. I put this together with the following ideas in mind:
+This is an opinionated starter template for a lightweight Express based REST API. Had the following ideas in mind (not all of them implemented yet):
 
-* Database agnostic (probably the most important feature, will leverage passport)
+* Database agnostic (probably the most important feature, using [Passportjs](http://passportjs.org/))
 * Multiple environment setups out of the box
 * Test suite template using mocha and chai
 * Authentication using JWT (maybe questionable decision, but I trust & like it)
 
-Still very much a WIP, branches will hopefully contain multiple DB setups.
+Still very much a WIP, it even has some custom names (like the error handling one). Current master branch is using postgres, but branches will hopefully contain multiple DB setups.
 
 ### Where to go from here?
 
 Choose a database and authenticate users. The verification of the JWT will use [passport-jwt strategy](https://github.com/themikenicholson/passport-jwt).
 
-Why this authentication method? Mostly a lightweight stateless implementation, simplicity & stubbornness. I love discussing this subject, shoot me an email or -> [@fdoxyz](https://twitter.com/fdoxyz)
+Why this authentication method? Mostly because it's a stateless implementation, simplicity & stubbornness tbh. I love discussing this subject, hit me with an email or -> [@fdoxyz](https://twitter.com/fdoxyz)
 
 ##### LICENSE
 
