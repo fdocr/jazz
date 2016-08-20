@@ -8,6 +8,7 @@ exports.JazzError = JazzError;
 function JazzError(err) {
   this.status = err.status;
   this.message = err.message;
+  this.customError = true;
   Error.captureStackTrace(this, JazzError);
 }
 JazzError.prototype = Object.create(Error.prototype);
@@ -16,6 +17,10 @@ JazzError.prototype.constructor = JazzError;
 function errorTypes() {
 	return {
 		//https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+    badRequest: {
+      status: 400,
+      message: 'Bad request.'
+    },
 		incorrectParameters: {
 			status: 400,
 			message: 'Incorrect or missing parameters.'
@@ -39,6 +44,10 @@ function errorTypes() {
     emailInUse: {
       status: 420,
       message: 'Email already in use. Forgot your password?'
+    },
+    mustProvideUserId: {
+      status: 421,
+      message: 'Must provide a user id'
     },
 		internalServerError: {
 			status: 500,

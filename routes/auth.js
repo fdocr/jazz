@@ -14,8 +14,10 @@ var router = require('express').Router(),
  * @return: The JWT signed
  */
 function signJWT(userId) {
-	return jwt.sign({ 'id': userId }, config.secretHash, {
-		expiresInSeconds: 24 * 60 * 60
+	return jwt.sign({
+		'id': userId
+	}, config.secretHash, {
+		expiresIn: '42 days'
 	});
 }
 
@@ -52,10 +54,11 @@ router.post('/register', function(req, res) {
 		});
 	})
 	.then(function(user) {
-		return res.json({ 'token': signJWT(user.id) });
+		res.json('JWT ' + signJWT(user.id));
 	})
 	.catch(function(err) {
-		return res.status(err.status || 500).json({ error: err.message });
+		if(!err.customError) err = errorTypes.badRequest;
+		res.status(err.status).json(err.message);
 	});
 });
 
@@ -63,7 +66,7 @@ router.post('/register', function(req, res) {
  * Authenticate with email & password
  * @param email: The user's email to authenticate
  * @param password: The user's submited password
- * @return: The JWT signed
+ * @return: The JWT bearer token signed
  */
 router.post('/email', function(req, res) {
 	var password = req.body.password,
@@ -88,26 +91,12 @@ router.post('/email', function(req, res) {
 		if(!validPassword) {
 			throw new JazzError(errorTypes.unauthorized);
 		} else {
-      return res.json({ 'token': signJWT(userId) });
+      res.json('JWT ' + signJWT(userId));
     }
   })
 	.catch(function(err) {
-		return res.status(err.status || 500).json({ error: err.message });
-	});
-});
-
-/*
- * Decodes a JWT (dev purposes)
- * @param token: To decode
- * @return: The JWT decoded as JSON
- */
-router.post('/decode', function(req, res) {
-	jwt.verify(req.body.token, config.secretHash, function(err, decoded) {
-		if(err) {
-			return res.status(500).json({ error: err.message });
-		} else {
-			res.json(decoded);
-		}
+		if(!err.customError) err = errorTypes.badRequest;
+		res.status(err.status).json(err.message);
 	});
 });
 

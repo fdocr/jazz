@@ -1,23 +1,21 @@
 var express = require('express'),
     path = require('path'),
-    favicon = require('serve-favicon'),
     logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    config = require('./config'),
+    passport = require('./config/passport.js'),
+    app = express();
 
-var app = express();
+if(config.env === 'production') {
+  app.use(logger('tiny'));
+} else {
+  app.use(logger('dev'));
+}
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.strategy.initialize());
 
 app.use('/', require('./routes'));
 
@@ -32,10 +30,10 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if(config.env === 'development') {
   app.use(function(err, req, res, next) {
 	  res.status(err.status || 500).json({
-      message: err.message || 'Internal Server Error',
+      message: err.message || 'Internal server error',
       stack: err.stack || 'No stacktrace available'
     });
   });
@@ -45,7 +43,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error'
+    message: err.message || 'Internal server error'
   });
 });
 

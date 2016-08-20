@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-  var Category = sequelize.define('Category', {
+  var Role = sequelize.define('Role', {
     name: {
       type: DataTypes.STRING,
       primaryKey: true,
@@ -7,5 +7,5 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  return Category;
+  return Role;
 };
