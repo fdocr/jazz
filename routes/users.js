@@ -25,6 +25,7 @@ router.get('/all', passport.superuser, function(req, res) {
   User.findAll({
     offset: offset,
     limit: limit,
+    order: '"id" DESC',
     attributes: { exclude: ['password'] }
   })
   .then(function(users) {
@@ -53,7 +54,6 @@ router.get('/me', function(req, res) {
     res.status(err.status).json(err.message);
   });
 });
-
 
 /**
   * @description: Get user user by id
@@ -96,12 +96,15 @@ router.put('/me', function(req, res) {
   }
 
   User.update(opts, { where: { id: req.user.id } })
-  .then(function(result) {
-  res.json({ success: true });
+  .then(function(user) {
+    res.json({ success: true });
   })
   .catch(function(err) {
-  if(!err.customError) err = errorTypes.badRequest;
-  res.status(err.status).json(err.message);
+    if(!err.customError) {
+      console.log(err.message);
+      err = errorTypes.badRequest;
+    }
+    res.status(err.status).json(err.message);
   });
 });
 
@@ -127,25 +130,11 @@ router.put('/:id', function(req, res) {
     }
   }
   if(req.body.role) {
-    opts.RoleName = req.body.role.toUpperCase();
+    opts.role = req.body.role.toUpperCase();
   }
 
   User.update(opts, { where: { id: req.params.id } })
   .then(function(result) {
-    res.json({ success: true });
-  })
-  .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
-    res.status(err.status).json(err.message);
-  });
-});
-
-/**
-  * @description: Deletes a user by id (Dangerous)
-  */
-router.delete('/:id', passport.superuser, function(req, res) {
-  User.destroy({ where: { id: req.params.id } })
-  .then(function(roles) {
     res.json({ success: true });
   })
   .catch(function(err) {
@@ -160,7 +149,21 @@ router.delete('/:id', passport.superuser, function(req, res) {
 router.delete('/me', function(req, res) {
   User.destroy({ where: { id: req.user.id } })
   .then(function(roles) {
-    res.json({ success: true });
+    res.json({ 'bye': 'bye' });
+  })
+  .catch(function(err) {
+    if(!err.customError) err = errorTypes.badRequest;
+    res.status(err.status).json(err.message);
+  });
+});
+
+/**
+  * @description: Deletes a user by id (Dangerous)
+  */
+router.delete('/:id', passport.superuser, function(req, res) {
+  User.destroy({ where: { id: req.params.id } })
+  .then(function(roles) {
+    res.json({ 'bye': 'bye' });
   })
   .catch(function(err) {
     if(!err.customError) err = errorTypes.badRequest;

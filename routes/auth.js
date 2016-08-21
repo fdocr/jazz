@@ -48,11 +48,17 @@ router.post('/register', function(req, res) {
     return User.create({
       name: name,
       email: email,
-      password: hash
+      password: hash,
+      role: utils.roles.user
     });
   })
   .then(function(user) {
-    res.json({ token: 'JWT ' + signJWT(user.id) });
+    user = user.dataValues;
+    delete user.password; //Avoid returning password hash in the response
+    res.json({
+      user: user,
+      token: 'JWT ' + signJWT(user.id)
+    });
   })
   .catch(function(err) {
     if(!err.customError) err = errorTypes.badRequest;
@@ -75,18 +81,23 @@ router.post('/email', function(req, res) {
     return res.status(err.status).json(err.message);
   }
 
-  var userId;
+  var user;
   User.findOne({ where : { email: email } })
-  .then(function(user) {
-    if(!user) throw new JazzError(errorTypes.notFound);
+  .then(function(usr) {
+    if(!usr) throw new JazzError(errorTypes.notFound);
     else {
-      userId = user.id;
-      return bcrypt.compareAsync(password, user.password);
+      user = usr.dataValues;
+      var passwordHash = user.password;
+      delete user.password; //Avoid returning password hash in the response
+      return bcrypt.compareAsync(password, passwordHash);
     }
   })
   .then(function(validPassword) {
     if(!validPassword) throw new JazzError(errorTypes.unauthorized);
-    else res.json({ token: 'JWT ' + signJWT(userId) });
+    else res.json({
+      user: user,
+      token: 'JWT ' + signJWT(user.id)
+    });
   })
   .catch(function(err) {
     if(!err.customError) {

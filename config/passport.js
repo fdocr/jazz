@@ -1,6 +1,7 @@
 var User          = require('../models').User,
     config        = require('./index.js'),
-    unauthorized  = require('../utils').errorTypes.unauthorized,
+    utils         = require('../utils'),
+    unauthorized  = utils.errorTypes.unauthorized,
     passport      = require('passport'),
     passportJWT   = require('passport-jwt'),
     JwtStrategy   = passportJWT.Strategy,
@@ -28,7 +29,7 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
 exports.strategy = passport;
 exports.authenticate = passport.authenticate('jwt', { session: false });
 exports.superuser = function(req, res, next) {
-  if(req.user.RoleName === 'ADMIN') {
+  if(req.user.role === utils.roles.admin) {
     next();
   } else {
     res.status(unauthorized.status).json(unauthorized.message);

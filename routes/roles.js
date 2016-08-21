@@ -32,7 +32,7 @@ router.post('/', passport.superuser, function(req, res) {
 
   Role.create({ name: req.body.name.toUpperCase() })
   .then(function(role) {
-    res.json({ success: true });
+    res.json(role);
   })
   .catch(function(err) {
     if(!err.customError) err = errorTypes.badRequest;
@@ -46,7 +46,7 @@ router.post('/', passport.superuser, function(req, res) {
 router.delete('/:name', passport.superuser, function(req, res) {
   Role.destroy({ where: { name: req.params.name.toUpperCase() } })
   .then(function(roles) {
-    res.json({ success: true });
+    res.json({ 'bye': 'bye' });
   })
   .catch(function(err) {
     if(!err.customError) err = errorTypes.badRequest;

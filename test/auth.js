@@ -1,5 +1,6 @@
 var Promise     = require('bluebird'),
     models      = require('../models'),
+    utils       = require('../utils'),
     rp          = require('request-promise'),
     expect      = require('chai').expect,
     errorTypes  = require('../utils').errorTypes;
@@ -11,7 +12,7 @@ module.exports = function(testData) {
       return models.User.truncate({ logging: false });
     });
 
-    it('Should register a new user', function (done) {
+    it('should register a new user', function (done) {
       rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/register'),
@@ -20,6 +21,9 @@ module.exports = function(testData) {
       .then(function(response) {
         var result = JSON.parse(response);
         expect(result).to.have.property('token');
+        expect(result).to.have.property('user');
+        expect(result.user).to.have.property('role', utils.roles.user);
+        expect(result.user).to.not.have.property('password');
         authToken1 = result.token;
         done();
       })
@@ -28,14 +32,14 @@ module.exports = function(testData) {
       });
     });
 
-    it('Should fail to register an existing (email) user', function (done) {
+    it('should fail to register an existing (email) user', function (done) {
       rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/register'),
         form: testData.users[0]
       })
       .then(function(response) {
-        done('Should have responded with an error status when creating the user');
+        done('should have responded with an error status when creating the user');
       })
       .catch(function(err) {
         expect(err).to.have.property('statusCode', errorTypes.emailInUse.status);
@@ -43,7 +47,7 @@ module.exports = function(testData) {
       });
     });
 
-    it('Should login an existing user', function (done) {
+    it('should login an existing user', function (done) {
       rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/email'),
@@ -55,6 +59,7 @@ module.exports = function(testData) {
       .then(function(response) {
         var result = JSON.parse(response);
         expect(result).to.have.property('token');
+        expect(result.user).to.not.have.property('password');
         done();
       })
       .catch(function(err) {
@@ -62,7 +67,7 @@ module.exports = function(testData) {
       });
     });
 
-    it('Should refresh a valid token', function (done) {
+    it('should refresh a valid token', function (done) {
       Promise.delay(1000).then(function() {
         return rp({
           method: 'POST',
@@ -81,13 +86,13 @@ module.exports = function(testData) {
       });
     });
 
-    it('Should fail to access a secured endpoint without a valid JWT Auth header', function (done) {
+    it('should fail to access a secured endpoint without a valid JWT Auth header', function (done) {
       rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/refresh')
       })
       .then(function() {
-        done('Should have responded with an unauthorized error');
+        done('should have responded with an unauthorized error');
       })
       .catch(function(err) {
         expect(err).to.have.property('statusCode', errorTypes.unauthorized.status);
@@ -95,7 +100,7 @@ module.exports = function(testData) {
       });
     });
 
-    it('Should fail to access a secured endpoint with a valid JWT but non-existing user', function (done) {
+    it('should fail to access a secured endpoint with a valid JWT but non-existing user', function (done) {
       models.User.truncate({ logging: false })
       .then(function() {
         return rp({
@@ -105,7 +110,7 @@ module.exports = function(testData) {
         });
       })
       .then(function() {
-        done('Should have responded with an unauthorized error');
+        done('should have responded with an unauthorized error');
       })
       .catch(function(err) {
         expect(err).to.have.property('statusCode', errorTypes.unauthorized.status);

@@ -4,6 +4,7 @@ var Promise = require('bluebird'),
 
 exports.errorTypes = errorTypes();
 exports.JazzError = JazzError;
+exports.roles = roles();
 
 function JazzError(err) {
   this.status = err.status;
@@ -13,6 +14,13 @@ function JazzError(err) {
 }
 JazzError.prototype = Object.create(Error.prototype);
 JazzError.prototype.constructor = JazzError;
+
+function roles() {
+  return {
+    user: 'USER',
+    admin: 'ADMIN'
+  };
+}
 
 function errorTypes() {
   return {

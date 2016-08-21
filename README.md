@@ -1,23 +1,26 @@
 ### Node JWT Template
 
-This is an opinionated starter template for a lightweight Express based REST API. Had the following ideas in mind (not all of them implemented yet):
+This is an opinionated starter template for a lightweight Express based REST API. It intends to remove the authentication burden that every API needs to solve before starting to work in their own specific implementation. It pursues compliance with the following ideals:
 
 * Database agnostic (probably the most important feature, using [Passportjs](http://passportjs.org/))
 * Multiple environment setups out of the box
 * Test suite template using mocha and chai
 * Authentication using JWT (maybe questionable decision, but I trust & like it)
 
-Still very much a WIP, it even has some custom names (like the error handling one). Current master is using postgres, but branches will hopefully contain multiple DB setups.
+Disclaimer: Still a WIP, it even has some custom names that would have to be modified manually. Current master is using postgres and ideally branches would support multiple databases (see [the list](https://github.com/fdoxyz/node-jwt-template/blob/master/CONTRIBUTING.md)).
 
 Checkout the [contributing page](https://github.com/fdoxyz/node-jwt-template/blob/master/CONTRIBUTING.md) in case you are interested in giving me a hand.
 
 ### Where to go from here?
 
-Choose a database and authenticate users. The verification of the JWT will use [passport-jwt strategy](https://github.com/themikenicholson/passport-jwt).
+Basically user authentication is handled with roles and that implementation is localted in `config/passport.js` file. It is intended to be as decoupled as possible. It leverages JSON Web Tokens using [passport-jwt strategy](https://github.com/themikenicholson/passport-jwt).
 
-Why this authentication method? Mostly because it's a stateless implementation, simplicity & stubbornness tbh. I love discussing this subject, hit me with an email or -> [@fdoxyz](https://twitter.com/fdoxyz)
+Implemented & tested endpoints are:
+* `/auth`
+* `/users`
+* `/roles`
 
-### LICENSE
+Why this authentication method? Mostly because it's a stateless implementation, simplicity & personal stubbornness tbh. I love discussing this subject, hit me with an email or -> [@fdoxyz](https://twitter.com/fdoxyz)
 
 ```
 The MIT License
