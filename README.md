@@ -2,25 +2,36 @@
 
 This is an opinionated starter template for a lightweight Express based REST API. It intends to remove the authentication burden that every API needs to solve before starting to work in their own specific implementation. It pursues compliance with the following ideals:
 
-* Database agnostic (probably the most important feature, using [Passportjs](http://passportjs.org/))
+* Database agnostic (probably most important feature, using [Passportjs](http://passportjs.org/))
 * Multiple environment setups out of the box
 * Test suite template using mocha and chai
-* Authentication using JWT (maybe questionable decision, but I trust & like it)
+* Authentication using JWT (I trust & like it)
 
-Disclaimer: Still a WIP, it even has some custom names that would have to be modified manually. Current master is using postgres and ideally branches would support multiple databases (see [the list](https://github.com/fdoxyz/node-jwt-template/blob/master/CONTRIBUTING.md)).
+Disclaimer: Still a WIP, it even has some custom names that would have to be modified manually. Current master is using postgres and ideally branches will support multiple databases (see [the list](https://github.com/fdoxyz/node-jwt-template/blob/master/CONTRIBUTING.md)).
 
 Checkout the [contributing page](https://github.com/fdoxyz/node-jwt-template/blob/master/CONTRIBUTING.md) in case you are interested in giving me a hand.
 
+### How-to
+
+You will need a database listening on `localhost`, I created a simple [docker image](https://hub.docker.com/r/fdoxyz/test-postgres/) based on the official postgres image that sets up the test database and user. The `docker-compose.yml` is not finished yet, but I'm temporarily working with docker this way:
+
+1. `docker run -d --name db -p 5432:5432 fdoxyz/test-postgres` will setup the test DB.
+2. Run [nodemon](https://www.npmjs.com/package/nodemon) for autoreload.
+3. Execute tests using `npm test`
+4. (optional) `psql` into the db: `docker run -it --rm --link db:db postgres psql -h db -U test -d test`
+
 ### Where to go from here?
 
-Basically user authentication is handled with roles and that implementation is localted in `config/passport.js` file. It is intended to be as decoupled as possible. It leverages JSON Web Tokens using [passport-jwt strategy](https://github.com/themikenicholson/passport-jwt).
+Basically user authentication is handled with roles. That logic is localted in `config/passport.js`. It is intended to be as decoupled as possible and leverages JSON Web Tokens using [passport-jwt strategy](https://github.com/themikenicholson/passport-jwt).
+
+Why this authentication method? Mostly because it's a stateless implementation, simplicity & personal stubbornness tbh. I love discussing this subject, hit me with an email or -> [@fdoxyz](https://twitter.com/fdoxyz)
 
 Implemented & tested endpoints are:
 * `/auth`
 * `/users`
 * `/roles`
 
-Why this authentication method? Mostly because it's a stateless implementation, simplicity & personal stubbornness tbh. I love discussing this subject, hit me with an email or -> [@fdoxyz](https://twitter.com/fdoxyz)
+Pura vida.
 
 ```
 The MIT License

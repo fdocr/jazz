@@ -13,7 +13,7 @@ module.exports = function(testData) {
     });
 
     before(function(done) {
-      rp({  //Ordered inserts to test sort/limit/offset endpoints
+      rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/register'),
         form: testData.users[0]
