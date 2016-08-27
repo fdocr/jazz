@@ -2,9 +2,14 @@ version: '2'
 services:
   db:
     image: fdoxyz/test-postgres
+    ports:
+      - "5432:5432"
   api:
     build: .
     image: fdoxyz/jazz
+    environment:
+      NODE_ENV: test
+      DB_CONN_STRING: postgres://test@db:5432/test
     ports:
       - "5000:5000"
     depends_on:

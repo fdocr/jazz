@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('jazz:server');
 var http = require('http');
 var models = require('../models');
+var Promise = require('bluebird');
+var config = require('../config');
 
 /**
  * Get port from environment and store in Express.
@@ -24,9 +26,14 @@ var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
+ * For testing purposes, a delay of 5s is set to wait for the DB
  */
 
-models.sequelize.sync()
+var dbDelay = (config.env === 'test') ? 7000 : 0;
+Promise.delay(dbDelay)
+.then(function() {
+  return models.sequelize.sync();
+})
 .then(function() {
   return models.setupRoles();
 })

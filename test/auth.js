@@ -6,10 +6,11 @@ var Promise     = require('bluebird'),
     errorTypes  = require('../utils').errorTypes;
 
 module.exports = function(testData) {
-  var authToken1;
+  var authToken;
   describe('Auth tests', function() {
-    after(function() {
-      return models.User.truncate({ logging: false });
+    after(function(done) {
+      models.User.truncate({ logging: false })
+      .asCallback(done);
     });
 
     it('should register a new user', function (done) {
@@ -24,7 +25,7 @@ module.exports = function(testData) {
         expect(result).to.have.property('user');
         expect(result.user).to.have.property('role', utils.roles.user);
         expect(result.user).to.not.have.property('password');
-        authToken1 = result.token;
+        authToken = result.token;
         done();
       })
       .catch(function(err) {
@@ -72,13 +73,13 @@ module.exports = function(testData) {
         return rp({
           method: 'POST',
           uri: (testData.baseURL + '/auth/refresh'),
-          headers: { 'Authorization': authToken1 }
+          headers: { 'Authorization': authToken }
         });
       })
       .then(function(response) {
         var result = JSON.parse(response);
-        expect(result).to.have.property('token').and.not.equal(authToken1);
-        authToken1 = result.token;
+        expect(result).to.have.property('token').and.not.equal(authToken);
+        authToken = result.token;
         done();
       })
       .catch(function(err) {
@@ -106,7 +107,7 @@ module.exports = function(testData) {
         return rp({
           method: 'POST',
           uri: (testData.baseURL + '/auth/refresh'),
-          headers: { 'Authorization': authToken1 }
+          headers: { 'Authorization': authToken }
         });
       })
       .then(function() {

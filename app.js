@@ -30,7 +30,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if(config.env === 'development') {
+if(config.env !== 'production') {
   app.use(function(err, req, res, next) {
 	  res.status(err.status || 500).json({
       message: err.message || 'Internal server error',

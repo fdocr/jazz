@@ -12,7 +12,7 @@ var router      = require('express').Router(),
   * @param userId: To encode in the token
   * @return: The JWT signed
   */
-router.get('/all', passport.superuser, function(req, res) {
+router.get('/', passport.superuser, function(req, res) {
   var offset = 0;
   if(req.query.offset && req.query.offset > 0) {
     offset = req.query.offset;
@@ -113,7 +113,7 @@ router.put('/me', function(req, res) {
   * @param userId: Target user to update
   * @param validProperty (optionals): Any property compliant w/ user model
   */
-router.put('/:id', function(req, res) {
+router.put('/:id', passport.superuser, function(req, res) {
   var opts = {};
   if(req.body.name) {
     opts.name = req.body.name;

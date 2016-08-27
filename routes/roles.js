@@ -9,7 +9,7 @@ var router      = require('express').Router(),
   * @description: Queries existing roles
   * @return: Array of roles
   */
-router.get('/all', passport.superuser, function(req, res) {
+router.get('/', passport.superuser, function(req, res) {
   Role.findAll()
   .then(function(roles) {
     res.json(roles);

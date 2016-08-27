@@ -36,7 +36,7 @@ module.exports = function(testData) {
     it('should list existing roles', function (done) {
       rp({
         method: 'GET',
-        uri: (testData.baseURL + '/roles/all'),
+        uri: (testData.baseURL + '/roles'),
         headers: { 'Authorization': token }
       })
       .then(function(response) {

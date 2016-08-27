@@ -56,7 +56,7 @@ module.exports = function(testData) {
     it('should fail to access a superuser endpoint without ADMIN role assigned', function (done) {
       rp({
         method: 'GET',
-        uri: (testData.baseURL + '/users/all'),
+        uri: (testData.baseURL + '/users'),
         headers: { 'Authorization': tokens[1] }
       })
       .then(function(response) {
@@ -71,7 +71,7 @@ module.exports = function(testData) {
     it('should list all users with valid credentials', function (done) {
       rp({
         method: 'GET',
-        uri: (testData.baseURL + '/users/all'),
+        uri: (testData.baseURL + '/users'),
         headers: { 'Authorization': tokens[0] }
       })
       .then(function(response) {
@@ -87,7 +87,7 @@ module.exports = function(testData) {
     it('should limit correctly on list all users', function (done) {
       rp({
         method: 'GET',
-        uri: (testData.baseURL + '/users/all?limit=1'),
+        uri: (testData.baseURL + '/users?limit=1'),
         headers: { 'Authorization': tokens[0] },
 
       })
@@ -104,7 +104,7 @@ module.exports = function(testData) {
     it('should offset correctly on list all users', function (done) {
       rp({
         method: 'GET',
-        uri: (testData.baseURL + '/users/all?offset=1'),
+        uri: (testData.baseURL + '/users?offset=1'),
         headers: { 'Authorization': tokens[0] },
 
       })
@@ -121,7 +121,7 @@ module.exports = function(testData) {
     it('should limit&offset correctly on list all users', function (done) {
       rp({
         method: 'GET',
-        uri: (testData.baseURL + '/users/all?offset=1&limit=1'),
+        uri: (testData.baseURL + '/users?offset=1&limit=1'),
         headers: { 'Authorization': tokens[0] },
 
       })
