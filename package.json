@@ -21,9 +21,10 @@
     "sequelize": "^3.24.0"
   },
   "devDependencies": {
-    "request-promise": "^4.1.1",
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
-    "mocha-junit-reporter": "^1.12.0"
+    "mocha-junit-reporter": "^1.12.0",
+    "request": "^2.74.0",
+    "request-promise": "^4.1.1"
   }
 }

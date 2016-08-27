@@ -6,7 +6,7 @@ WORKDIR /app
 # Dependencies & app
 COPY package.json /app/package.json
 RUN npm config set registry http://registry.npmjs.org && \
-    npm install && \
+    npm install -q && \
     npm ls && \
     mv /app/node_modules /node_modules
 COPY . /app

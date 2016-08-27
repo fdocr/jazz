@@ -9,6 +9,3 @@ node_modules: package.json
 
 test: node_modules
 	mocha $(options)
-
-docker-test:
-	/node_modules/mocha $(options)
