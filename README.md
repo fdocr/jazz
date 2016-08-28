@@ -1,4 +1,4 @@
-# Jazz
+# Jazz Template
 
 This is an opinionated starter template for lightweight NodeJS (Express based) REST APIs. It intends to kickstart development by implementing the common ground most API's share. It pursues the following ideals:
 
