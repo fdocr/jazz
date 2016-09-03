@@ -16,7 +16,7 @@ Checkout the [contributing page](https://github.com/fdoxyz/jazz/blob/master/CONT
 
 ### How-to
 
-By default the app connects to a DB on `localhost`, set `DB_CONN_STRING` env variable to a custom DB as you please. [This docker image](https://hub.docker.com/r/fdoxyz/test-postgres/) sets up a DB that works with the default connection string for the development environment. The following steps will get you up and running easily (you will need [docker](https://docs.docker.com/engine/installation/)):
+By default the app connects to a DB on `localhost`, but you can set `DB_CONN_STRING` env variable to a custom DB as you please. [This docker image](https://hub.docker.com/r/fdoxyz/test-postgres/) sets up a DB that works with the default connection string for the development environment. The following steps will get you up and running easily (you will need [docker](https://docs.docker.com/engine/installation/)):
 
 1. `docker run -d --name db -p 5432:5432 fdoxyz/test-postgres` will setup the test DB.
 2. Run [nodemon](https://www.npmjs.com/package/nodemon) for autoreload.
