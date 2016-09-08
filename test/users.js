@@ -7,16 +7,49 @@ var Promise     = require('bluebird'),
 
 module.exports = function(testData) {
   var ids = [], tokens = [];
+  var users = [
+    {
+      'name': 'test user',
+      'email': 'test@email.com',
+      'password': 'pass123'
+    },
+    {
+      'name': 'test user2',
+      'email': 'test2@email.com',
+      'password': 'pass123'
+    },
+    {
+      'name': 'test user3',
+      'email': 'test3@email.com',
+      'password': 'pass123'
+    }
+  ];
   describe('Users tests', function() {
-    after(function() {
-      return models.User.truncate({ logging: false });
+    after(function(done) {
+      models.User.destroy({
+        where: {
+          $or: [
+            {
+              email: users[0].email
+            },
+            {
+              email: users[1].email
+            },
+            {
+              email: users[2].email
+            }
+          ]
+        },
+        logging: false
+      })
+      .asCallback(done);
     });
 
     before(function(done) {
       rp({  //Ordered inserts to test sort/limit/offset endpoints
         method: 'POST',
         uri: (testData.baseURL + '/auth/register'),
-        form: testData.users[0]
+        form: users[0]
       })
       .then(function(usr) {
         usr = JSON.parse(usr);
@@ -25,7 +58,7 @@ module.exports = function(testData) {
         return rp({
           method: 'POST',
           uri: (testData.baseURL + '/auth/register'),
-          form: testData.users[1]
+          form: users[1]
         });
       })
       .then(function(usr) {
@@ -35,7 +68,7 @@ module.exports = function(testData) {
         return rp({
           method: 'POST',
           uri: (testData.baseURL + '/auth/register'),
-          form: testData.users[2]
+          form: users[2]
         });
       })
       .then(function(usr) {
@@ -128,7 +161,7 @@ module.exports = function(testData) {
       .then(function(response) {
         var result = JSON.parse(response);
         expect(result).to.have.lengthOf(1);
-        expect(result[0]).to.have.property('name', testData.users[1].name);
+        expect(result[0]).to.have.property('name', users[1].name);
         done();
       })
       .catch(function(err) {
@@ -145,8 +178,8 @@ module.exports = function(testData) {
       })
       .then(function(response) {
         var result = JSON.parse(response);
-        expect(result).to.have.property('name', testData.users[0].name);
-        expect(result).to.have.property('email', testData.users[0].email);
+        expect(result).to.have.property('name', users[0].name);
+        expect(result).to.have.property('email', users[0].email);
         expect(result).to.not.have.property('password');
         done();
       })
@@ -164,8 +197,8 @@ module.exports = function(testData) {
       })
       .then(function(response) {
         var result = JSON.parse(response);
-        expect(result).to.have.property('name', testData.users[1].name);
-        expect(result).to.have.property('email', testData.users[1].email);
+        expect(result).to.have.property('name', users[1].name);
+        expect(result).to.have.property('email', users[1].email);
         expect(result).to.not.have.property('password');
         done();
       })
