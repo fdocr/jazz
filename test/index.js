@@ -3,24 +3,7 @@ var expect    = require('chai').expect,
     usersTest = require('./users.js'),
     rolesTest = require('./roles.js'),
     testData  = {
-      baseURL: process.env.TEST_URL || 'http://localhost:5000',
-      users: [
-        {
-          'name': 'test user',
-          'email': 'test@email.com',
-          'password': 'pass123'
-        },
-        {
-          'name': 'test user2',
-          'email': 'test2@email.com',
-          'password': 'pass123'
-        },
-        {
-          'name': 'test user3',
-          'email': 'test3@email.com',
-          'password': 'pass123'
-        }
-      ]
+      baseURL: process.env.TEST_URL || 'http://localhost:5000'
     };
 
 describe('Test Suite', function() {

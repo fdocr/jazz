@@ -8,15 +8,22 @@ var Promise     = require('bluebird'),
 module.exports = function(testData) {
   describe('Roles tests', function() {
     var user, token;
-    after(function() {
-      return models.User.truncate({ logging: false });
+    var testUser = {
+      'name': 'test user',
+      'email': 'test@email.com',
+      'password': 'pass123'
+    };
+
+    after(function(done) {
+      models.User.destroy({ where: { email: testUser.email }, logging: false })
+      .asCallback(done);
     });
 
     before(function(done) {
       rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/register'),
-        form: testData.users[0]
+        form: testUser
       })
       .then(function(res) {
         res = JSON.parse(res);

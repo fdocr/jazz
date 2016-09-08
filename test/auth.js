@@ -7,9 +7,15 @@ var Promise     = require('bluebird'),
 
 module.exports = function(testData) {
   var authToken;
+  var testUser = {
+    'name': 'test user',
+    'email': 'test@email.com',
+    'password': 'pass123'
+  };
+
   describe('Auth tests', function() {
     after(function(done) {
-      models.User.truncate({ logging: false })
+      models.User.destroy({ where: { email: testUser.email }, logging: false })
       .asCallback(done);
     });
 
@@ -17,7 +23,7 @@ module.exports = function(testData) {
       rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/register'),
-        form: testData.users[0]
+        form: testUser
       })
       .then(function(response) {
         var result = JSON.parse(response);
@@ -37,7 +43,7 @@ module.exports = function(testData) {
       rp({
         method: 'POST',
         uri: (testData.baseURL + '/auth/register'),
-        form: testData.users[0]
+        form: testUser
       })
       .then(function(response) {
         done('should have responded with an error status when creating the user');
@@ -53,8 +59,8 @@ module.exports = function(testData) {
         method: 'POST',
         uri: (testData.baseURL + '/auth/email'),
         form: {
-          'email': testData.users[0].email,
-          'password': testData.users[0].password
+          'email': testUser.email,
+          'password': testUser.password
         }
       })
       .then(function(response) {
@@ -102,8 +108,8 @@ module.exports = function(testData) {
     });
 
     it('should fail to access a secured endpoint with a valid JWT but non-existing user', function (done) {
-      models.User.truncate({ logging: false })
-      .then(function() {
+      models.User.destroy({ where: { email: testUser.email }, logging: false })
+      .then(function(res) {
         return rp({
           method: 'POST',
           uri: (testData.baseURL + '/auth/refresh'),
