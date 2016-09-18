@@ -12,7 +12,7 @@ var router      = require('express').Router(),
   * @param userId: To encode in the token
   * @return: The JWT signed
   */
-router.get('/', passport.superuser, function(req, res) {
+router.get('/', passport.admin, function(req, res) {
   var offset = 0;
   if(req.query.offset && req.query.offset > 0) {
     offset = req.query.offset;
@@ -32,7 +32,7 @@ router.get('/', passport.superuser, function(req, res) {
     res.json(users);
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -50,7 +50,7 @@ router.get('/me', function(req, res) {
     res.json(user);
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -69,7 +69,7 @@ router.get('/:id', function(req, res) {
     res.json(user);
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -100,10 +100,7 @@ router.put('/me', function(req, res) {
     res.json({ success: true });
   })
   .catch(function(err) {
-    if(!err.customError) {
-      console.log(err.message);
-      err = errorTypes.badRequest;
-    }
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -113,7 +110,7 @@ router.put('/me', function(req, res) {
   * @param userId: Target user to update
   * @param validProperty (optionals): Any property compliant w/ user model
   */
-router.put('/:id', passport.superuser, function(req, res) {
+router.put('/:id', passport.admin, function(req, res) {
   var opts = {};
   if(req.body.name) {
     opts.name = req.body.name;
@@ -138,7 +135,7 @@ router.put('/:id', passport.superuser, function(req, res) {
     res.json({ success: true });
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -152,7 +149,7 @@ router.delete('/me', function(req, res) {
     res.json({ 'bye': 'bye' });
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -160,13 +157,13 @@ router.delete('/me', function(req, res) {
 /**
   * @description: Deletes a user by id (Dangerous)
   */
-router.delete('/:id', passport.superuser, function(req, res) {
+router.delete('/:id', passport.admin, function(req, res) {
   User.destroy({ where: { id: req.params.id } })
   .then(function(roles) {
     res.json({ 'bye': 'bye' });
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });

@@ -5,6 +5,16 @@ var Promise = require('bluebird'),
 exports.errorTypes = errorTypes();
 exports.JazzError = JazzError;
 exports.roles = roles();
+exports.normalizeError = normalizeError;
+
+function normalizeError(err) {
+  if(err.name === "SequelizeValidationError") {
+    err = errorTypes().incorrectParameters;
+  } else if(!err.customError) {
+    err = errorTypes().badRequest;
+  }
+  return err;
+}
 
 function JazzError(err) {
   this.status = err.status;

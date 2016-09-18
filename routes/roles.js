@@ -9,13 +9,13 @@ var router      = require('express').Router(),
   * @description: Queries existing roles
   * @return: Array of roles
   */
-router.get('/', passport.superuser, function(req, res) {
+router.get('/', passport.admin, function(req, res) {
   Role.findAll()
   .then(function(roles) {
     res.json(roles);
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -24,7 +24,7 @@ router.get('/', passport.superuser, function(req, res) {
   * @description: Creates a new role
   * @param name: The role name to create
   */
-router.post('/', passport.superuser, function(req, res) {
+router.post('/', passport.admin, function(req, res) {
   if(!req.body.name) {
     var err = errorTypes.incorrectParameters;
     return res.status(err.status).json(err.message);
@@ -35,7 +35,7 @@ router.post('/', passport.superuser, function(req, res) {
     res.json(role);
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -43,13 +43,13 @@ router.post('/', passport.superuser, function(req, res) {
 /**
   * @description: Deletes a role
   */
-router.delete('/:name', passport.superuser, function(req, res) {
+router.delete('/:name', passport.admin, function(req, res) {
   Role.destroy({ where: { name: req.params.name.toUpperCase() } })
   .then(function(roles) {
     res.json({ 'bye': 'bye' });
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });

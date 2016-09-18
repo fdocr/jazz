@@ -13,23 +13,44 @@ var opts = {
 };
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+  done(null, jwt_payload);
+}));
+
+//Strategy export
+exports.strategy = passport;
+//Basic authenticate middleware - Only verifies & decodes the JWT payload
+exports.authenticate = passport.authenticate('jwt', { session: false });
+//Confirms the user exists in the DB
+exports.confirm = confirm;
+//Confirms the user exists in the DB and has the 'ADMIN' role
+exports.admin = admin;
+
+function confirm(req, res, next) {
   User.findOne({
-    where: { id: jwt_payload.id },
+    where: { id: req.user.id },
     attributes: { exclude: ['password'] }
   })
   .then(function(user) {
-    if(user) return user;
-    else return false;
-  })
-  .asCallback(done);
-}));
+    if(!user) {
+      res.status(unauthorized.status).json(unauthorized.message);
+    } else {
+      req.user = user.dataValues;
+      next();
+    }
+  });
+}
 
-exports.strategy = passport;
-exports.authenticate = passport.authenticate('jwt', { session: false });
-exports.superuser = function(req, res, next) {
-  if(req.user.role === utils.roles.admin) {
-    next();
-  } else {
-    res.status(unauthorized.status).json(unauthorized.message);
-  }
-};
+function admin(req, res, next) {
+  User.findOne({
+    where: { id: req.user.id },
+    attributes: { exclude: ['password'] }
+  })
+  .then(function(user) {
+    if(!user || user.role !== utils.roles.admin) {
+      res.status(unauthorized.status).json(unauthorized.message);
+    } else {
+      req.user = user.dataValues;
+      next();
+    }
+  });
+}

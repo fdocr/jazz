@@ -18,7 +18,7 @@ function signJWT(userId) {
   return jwt.sign({
     'id': userId
   }, config.secretHash, {
-    expiresIn: '42 days'
+    expiresIn: '30 days'
   });
 }
 
@@ -61,7 +61,7 @@ router.post('/register', function(req, res) {
     });
   })
   .catch(function(err) {
-    if(!err.customError) err = errorTypes.badRequest;
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -100,10 +100,7 @@ router.post('/email', function(req, res) {
     });
   })
   .catch(function(err) {
-    if(!err.customError) {
-      console.log(err.message);
-      err = errorTypes.badRequest;
-    }
+    err = utils.normalizeError(err);
     res.status(err.status).json(err.message);
   });
 });
@@ -113,7 +110,8 @@ router.post('/email', function(req, res) {
   *               sent as authentication
   * @return: The new JWT bearer token
   */
-router.post('/refresh', passport.authenticate, function(req, res) {
+var authChecks = [passport.authenticate, passport.confirm];
+router.post('/refresh', authChecks, function(req, res) {
   res.json({ token: 'JWT ' + signJWT(req.user.id) });
 });
 
