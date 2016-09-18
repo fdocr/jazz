@@ -8,4 +8,4 @@ node_modules: package.json
 	@npm install
 
 test: node_modules
-	mocha $(options)
+	NODE_ENV=test mocha $(options)
